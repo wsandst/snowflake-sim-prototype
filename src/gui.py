@@ -14,12 +14,14 @@ import draw
 
 SortRenderType = Enum("SortingRenderingType", "BarGraph PointGraph PointSpiral PointCircle")
 
-IMAGE_SIZE = 384
+IMAGE_SIZE = 1000
 
 class HexagonGridWidget(QWidget):
-    def __init__(self, parent):
+    def __init__(self, parent, grid):
         """ Tab window for visualising Sorting Algorithms """
         super(HexagonGridWidget, self).__init__(parent)
+
+        self.grid = grid
 
         self.image_label = QLabel(self)
         self.image_label.setAlignment(Qt.AlignCenter)
@@ -34,7 +36,7 @@ class HexagonGridWidget(QWidget):
 
     def renderGrid(self):
         """ Render the hexagonal grid """
-        q_image = draw.draw_grid(None)
+        q_image = draw.draw_grid(self.grid, IMAGE_SIZE)
         pixmap = QPixmap.fromImage(q_image)
         pixmap = pixmap.scaled(IMAGE_SIZE, IMAGE_SIZE)
         self.image_label.setPixmap(pixmap)
@@ -94,23 +96,23 @@ class HexagonGridWidget(QWidget):
         self.render_timer.setInterval(self.current_frame_time)
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, grid):
         super().__init__()
 
         self.setWindowTitle('Sorting Algorithms Visualized')
         self.setStyleSheet("background-color: #181818; color: white")
 
-        self.grid_widget = HexagonGridWidget(self)
+        self.grid_widget = HexagonGridWidget(self, grid)
         self.setCentralWidget(self.grid_widget)
 
         self.grid_widget.setFocus()
         self.grid_widget.renderGrid()
 
 class MainApplication(QApplication):
-    def __init__(self):
+    def __init__(self, grid):
         super().__init__([])
 
-        window = MainWindow()
+        window = MainWindow(grid)
         window.show()
 
         sys.exit(self.exec_())

@@ -2,7 +2,7 @@
 from PIL import Image, ImageDraw, ImageFont
 from PyQt5.QtGui import QImage
 
-def draw_grid(grid, size=1000) -> QImage:
+def draw_grid(grid, size=1400) -> QImage:
     """ Draw a hexagonal grid """
     image = Image.new('RGB', (size,size), (0, 0, 0, 0))
     draw = ImageDraw.Draw(image)

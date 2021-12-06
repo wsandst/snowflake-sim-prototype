@@ -1,6 +1,6 @@
 import math
 
-HEX_SIZE = 10
+HEX_SIZE = 5
 HEX_OFFSET = 50
 AA_LEVEL = 2
 
@@ -36,7 +36,7 @@ class Cell:
         return False
 
     def get_color(self):
-        if self.water_level >= 0.5:
+        if self.water_level >= 0.6:
             return ((int)(127*self.water_level), (int)(210*self.water_level), (int)(245*self.water_level))
         else:
             return (0, 0, 0)

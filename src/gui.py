@@ -14,7 +14,7 @@ import draw
 
 SortRenderType = Enum("SortingRenderingType", "BarGraph PointGraph PointSpiral PointCircle")
 
-IMAGE_SIZE = 1000
+IMAGE_SIZE = 1400
 
 class HexagonGridWidget(QWidget):
     def __init__(self, parent, sim):

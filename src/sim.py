@@ -12,13 +12,13 @@ class SnowflakeSimulation:
         self.next_grid = HexGrid(grid.width, grid.height)
         self.setup_initial_simulation()
     
-    def setup_initial_simulation(self):
+    def setup_initial_simulation(self, alpha, beta, gamma):
         #self.background_vapor = 0.3 # Beta
         #self.vapor_addition = 0.001 # Gamma
         #self.vapor_diffusion = 1 # Alpha
-        self.background_vapor = 0.3 # Beta
-        self.vapor_addition = 0.001 # Gamma
-        self.vapor_diffusion = 1 # Alpha
+        self.background_vapor = beta # Beta
+        self.vapor_addition = gamma # Gamma
+        self.vapor_diffusion = alpha # Alpha
         for cell in self.current_grid.get_cells():
             cell.water_level = self.background_vapor
         self.current_grid.get_cell(self.current_grid.width//4, self.current_grid.height//2).water_level = 1

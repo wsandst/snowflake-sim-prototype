@@ -60,12 +60,14 @@ class HexagonGridWidget(QWidget):
         self.render_timer.start()
 
         # Render one frame
-        self.running_sorting = False
-        self.first_frame = True
+        self.running_sim = True
 
     def renderTimeout(self):
         """ Run a step of sorting algorithms and then render them to their images """
-        self.sim.update()
+        if self.running_sim:
+            self.sim.update()
+            print(f"Iteration: {self.sim.iteration_count}")
+
         if self.last_frame == None:
             self.last_frame = time.time()
 
@@ -75,7 +77,6 @@ class HexagonGridWidget(QWidget):
         end = time.time()
         self.frame_time_sum += end - self.last_frame
         self.last_frame = end
-        print(self.frame_counter)
         self.frame_counter += 1
         if self.frame_counter % self.fps_update_freq == 0:
             print(f'FPS: {self.fps_update_freq/self.frame_time_sum} ({1000*self.frame_time_sum/self.fps_update_freq}ms)')
@@ -84,7 +85,7 @@ class HexagonGridWidget(QWidget):
     def keyPressEvent(self, event):
         # Play/pause key
         if event.key() == Qt.Key_Return or event.key() == Qt.Key_Space:
-            self.running_sorting = not self.running_sorting
+            self.running_sim = not self.running_sim
         if event.key() == Qt.Key_Right:
             self.modifySpeed(0.5)
         if event.key() == Qt.Key_Left:

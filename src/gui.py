@@ -18,7 +18,7 @@ IMAGE_SIZE = 1000
 
 class HexagonGridWidget(QWidget):
     def __init__(self, parent, sim):
-        """ Tab window for visualising Sorting Algorithms """
+        """ Widget for visualizing he """
         super(HexagonGridWidget, self).__init__(parent)
 
         self.sim = sim
@@ -52,7 +52,7 @@ class HexagonGridWidget(QWidget):
         self.last_frame = None
 
         self.render_timer = QTimer(self)
-        self.current_frame_time = 64
+        self.current_frame_time = 16
         self.sorting_speed_mult = 1
         self.render_timer.setInterval(self.current_frame_time) #~60 FPS
 
@@ -101,7 +101,7 @@ class MainWindow(QMainWindow):
     def __init__(self, sim):
         super().__init__()
 
-        self.setWindowTitle('Sorting Algorithms Visualized')
+        self.setWindowTitle('Snowflake Simulation')
         self.setStyleSheet("background-color: #181818; color: white")
 
         self.grid_widget = HexagonGridWidget(self, sim)

@@ -11,6 +11,7 @@ class Cell:
         self.neighbours = []
 
         self.water_level = 0
+        self.diffusion_content = 0
 
     def get_pixel_coord(self):
         x = HEX_SIZE * (math.sqrt(3) * self.q  +  math.sqrt(3)/2 * self.r)
@@ -35,7 +36,10 @@ class Cell:
         return False
 
     def get_color(self):
-        return ((int)(self.water_level*128), (int)(self.water_level*128), (int)(self.water_level*128))
+        if self.water_level >= 0.5:
+            return ((int)(127*self.water_level), (int)(210*self.water_level), (int)(245*self.water_level))
+        else:
+            return (0, 0, 0)
 
 
 class HexGrid:

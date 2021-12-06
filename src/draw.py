@@ -10,8 +10,8 @@ def draw_grid(grid, size=1000) -> QImage:
     for hex in grid.get_cells():
         corners = hex.get_corners()
         corners.append(corners[0])
-        draw.polygon(corners, hex.color)
+        draw.polygon(corners, hex.get_color())
         for corner1, corner2 in zip(corners, corners[1:]):
-           draw.line((corner1[0], corner1[1], corner2[0], corner2[1]), fill="#FCD16F", width=3)
+           draw.line((corner1[0], corner1[1], corner2[0], corner2[1]), fill=(255, 255, 255), width=3)
 
     return QImage(image.tobytes("raw","RGB"), image.size[0], image.size[1], QImage.Format_RGB888)

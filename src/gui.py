@@ -17,11 +17,11 @@ SortRenderType = Enum("SortingRenderingType", "BarGraph PointGraph PointSpiral P
 IMAGE_SIZE = 1000
 
 class HexagonGridWidget(QWidget):
-    def __init__(self, parent, grid):
+    def __init__(self, parent, sim):
         """ Tab window for visualising Sorting Algorithms """
         super(HexagonGridWidget, self).__init__(parent)
 
-        self.grid = grid
+        self.sim = sim
 
         self.image_label = QLabel(self)
         self.image_label.setAlignment(Qt.AlignCenter)
@@ -33,10 +33,11 @@ class HexagonGridWidget(QWidget):
 
         self.rendering_type = SortRenderType.BarGraph
         self.rainbow = False
+        self.startRendering()
 
     def renderGrid(self):
         """ Render the hexagonal grid """
-        q_image = draw.draw_grid(self.grid, IMAGE_SIZE)
+        q_image = draw.draw_grid(self.sim.current_grid, IMAGE_SIZE)
         pixmap = QPixmap.fromImage(q_image)
         pixmap = pixmap.scaled(IMAGE_SIZE, IMAGE_SIZE)
         self.image_label.setPixmap(pixmap)
@@ -64,6 +65,7 @@ class HexagonGridWidget(QWidget):
 
     def renderTimeout(self):
         """ Run a step of sorting algorithms and then render them to their images """
+        self.sim.update()
         if self.last_frame == None:
             self.last_frame = time.time()
 
@@ -73,7 +75,7 @@ class HexagonGridWidget(QWidget):
         end = time.time()
         self.frame_time_sum += end - self.last_frame
         self.last_frame = end
-
+        print(self.frame_counter)
         self.frame_counter += 1
         if self.frame_counter % self.fps_update_freq == 0:
             print(f'FPS: {self.fps_update_freq/self.frame_time_sum} ({1000*self.frame_time_sum/self.fps_update_freq}ms)')
@@ -96,13 +98,13 @@ class HexagonGridWidget(QWidget):
         self.render_timer.setInterval(self.current_frame_time)
 
 class MainWindow(QMainWindow):
-    def __init__(self, grid):
+    def __init__(self, sim):
         super().__init__()
 
         self.setWindowTitle('Sorting Algorithms Visualized')
         self.setStyleSheet("background-color: #181818; color: white")
 
-        self.grid_widget = HexagonGridWidget(self, grid)
+        self.grid_widget = HexagonGridWidget(self, sim)
         self.setCentralWidget(self.grid_widget)
 
         self.grid_widget.setFocus()

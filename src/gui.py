@@ -12,8 +12,6 @@ import time
 
 import draw
 
-SortRenderType = Enum("SortingRenderingType", "BarGraph PointGraph PointSpiral PointCircle")
-
 IMAGE_SIZE = 1400
 
 class HexagonGridWidget(QWidget):
@@ -31,8 +29,6 @@ class HexagonGridWidget(QWidget):
         self.layout.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(self.image_label)
 
-        self.rendering_type = SortRenderType.BarGraph
-        self.rainbow = False
         self.startRendering()
 
     def renderGrid(self):

@@ -1,6 +1,6 @@
 import math
 
-HEX_SIZE = 5
+HEX_SIZE = 4
 HEX_OFFSET = 50
 AA_LEVEL = 2
 
@@ -9,7 +9,7 @@ class Cell:
         self.q = q
         self.r = r
         self.neighbours = []
-
+        self.receptive = False
         self.water_level = 0
         self.diffusion_content = 0
 
@@ -35,6 +35,9 @@ class Cell:
                     return True
         return False
 
+    def mark_if_receptive(self):
+        self.receptive = self.is_receptive()
+
     def get_color(self):
         if self.water_level >= 0.6:
             return ((int)(127*self.water_level), (int)(210*self.water_level), (int)(245*self.water_level))
@@ -52,9 +55,10 @@ class HexGrid:
             r_offset = math.floor(r/2.0)
             for q in range(0-r_offset, self.width-r_offset):
                 self.set_cell(q, r, Cell(q, r))
-        for cell in self.get_cells():
+        for cell in self.get_all_cells():
             cell.neighbours = self.get_neighbours(cell.q, cell.r)
         self.edge_cells = self.get_edge_cells()
+        self.all_cells = self.get_all_cells()
 
     def get_cell(self, q, r):
         return self.cells[q*self.height + r]
@@ -62,11 +66,13 @@ class HexGrid:
     def set_cell(self, q, r, cell):
         self.cells[q*self.height + r] = cell
 
-    def get_cells(self):
+    def get_all_cells(self):
+        all_cells = list()
         for r in range(self.height):
             r_offset = math.floor(r/2.0)
             for q in range(0-r_offset, self.width-r_offset):
-                yield self.get_cell(q, r)
+                all_cells.append(self.get_cell(q, r))
+        return all_cells
 
     def inside_bounds(self, q, r):
         return (q < self.width and r < self.height and self.get_cell(q,r) != None)
@@ -83,12 +89,10 @@ class HexGrid:
 
     def get_edge_cells(self):
         edge_cells = []
-        for cell in self.get_cells():
+        for cell in self.get_all_cells():
             if len(self.get_neighbours(cell.q, cell.r)) < 6:
                 edge_cells.append(cell)
         return edge_cells
-
-
 
 def hex_corner(center, size, i):
     angle_deg = 60 * i - 30

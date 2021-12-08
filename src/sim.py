@@ -19,13 +19,15 @@ class SnowflakeSimulation:
         self.background_vapor = beta # Beta
         self.vapor_addition = gamma # Gamma
         self.vapor_diffusion = alpha # Alpha
-        for cell in self.current_grid.get_cells():
+        for cell in self.current_grid.all_cells:
             cell.water_level = self.background_vapor
         self.current_grid.get_cell(self.current_grid.width//4, self.current_grid.height//2).water_level = 1
         self.iteration_count = 0
     
     def update(self):
-        for cell, next_cell in zip(self.current_grid.get_cells(), self.next_grid.get_cells()):
+        for cell, next_cell in zip(self.current_grid.all_cells, self.next_grid.all_cells):
+            cell.mark_if_receptive()
+        for cell, next_cell in zip(self.current_grid.all_cells, self.next_grid.all_cells):
             self.update_cell(cell, next_cell)
         # Set edge cells to background vapor level to introduce more vapor to the system
         for edge_cell in self.next_grid.edge_cells:
@@ -34,7 +36,7 @@ class SnowflakeSimulation:
         self.iteration_count += 1
 
     def update_cell(self, cell, next_cell):
-        if cell.is_receptive():
+        if cell.receptive:
             diffusion_particip = 0
             diffusion_nonparticip = cell.water_level + self.vapor_addition
         else:
@@ -43,7 +45,7 @@ class SnowflakeSimulation:
 
         avg = 0
         for neighbour in cell.neighbours:
-            if not neighbour.is_receptive():
+            if not neighbour.receptive:
                 avg += neighbour.water_level
 
         avg = avg / 6

@@ -6,7 +6,7 @@ import queue
 from sim import SnowflakeSimulation
 
 def main():
-    sim = SnowflakeSimulation(HexGrid(150, 150), 1, 0.4, 0.0001)
+    sim = SnowflakeSimulation(HexGrid(150, 150), alpha=1, beta=0.4, gamma=0.0001)
         
     application = gui.MainApplication(sim)
     

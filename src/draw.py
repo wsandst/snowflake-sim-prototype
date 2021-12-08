@@ -7,7 +7,7 @@ def draw_grid(grid, size=1400) -> QImage:
     image = Image.new('RGB', (size,size), (0, 0, 0, 0))
     draw = ImageDraw.Draw(image)
 
-    for hex in grid.get_cells():
+    for hex in grid.all_cells:
         corners = hex.get_corners()
         corners.append(corners[0])
         draw.polygon(corners, hex.get_color())

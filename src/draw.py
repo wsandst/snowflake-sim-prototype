@@ -2,15 +2,16 @@
 from PIL import Image, ImageDraw, ImageFont
 from PyQt5.QtGui import QImage
 
-def draw_grid(grid, size=1400) -> QImage:
+
+
+def draw_grid(grid, size=1200) -> QImage:
     """ Draw a hexagonal grid """
     image = Image.new('RGB', (size,size), (0, 0, 0, 0))
     draw = ImageDraw.Draw(image)
 
     for hex in grid.all_cells:
-        corners = hex.get_corners()
-        corners.append(corners[0])
-        draw.polygon(corners, hex.get_color())
+        if hex.get_color() != (0, 0, 0):
+            draw.polygon(hex.corners, hex.get_color())
         #for corner1, corner2 in zip(corners, corners[1:]):
            #draw.line((corner1[0], corner1[1], corner2[0], corner2[1]), fill=(255, 255, 255), width=3)
 

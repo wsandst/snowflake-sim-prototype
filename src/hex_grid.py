@@ -1,5 +1,4 @@
 import math
-
 HEX_SIZE = 4
 HEX_OFFSET = 50
 AA_LEVEL = 2
@@ -12,6 +11,8 @@ class Cell:
         self.receptive = False
         self.water_level = 0
         self.diffusion_content = 0
+        self.corners = self.get_corners()
+        self.corners.append(self.corners[0])
 
     def get_pixel_coord(self):
         x = HEX_SIZE * (math.sqrt(3) * self.q  +  math.sqrt(3)/2 * self.r)
@@ -48,7 +49,7 @@ class Cell:
 class HexGrid:
     """ Hexagonal grid, represented using Axial coordinates. """
     def __init__(self, width, height):
-        self.cells = [None for _ in range((width+width//2)*height)]
+        self.cells = [None] * (width + width//2) * height#[None for _ in range((width+width//2)*height)]
         self.width = width
         self.height = height
         for r in range(self.height):

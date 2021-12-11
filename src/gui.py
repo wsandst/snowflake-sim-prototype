@@ -5,14 +5,14 @@ from PyQt5.QtCore import pyqtSignal, Qt, QTimer, QUrl
 from PyQt5.QtWidgets import QMainWindow, QWidget, QApplication, QLayout, QStackedWidget, QCheckBox, QLabel, QComboBox, QHBoxLayout, QVBoxLayout, QPushButton, QFrame, QGridLayout, QAction, QSizePolicy
 from PyQt5.QtGui import QIcon, QPixmap, QFont, QImage, QFontDatabase
 from PyQt5.QtMultimedia import QSound, QSoundEffect
-
+from time import time
 from enum import Enum
 import sys
 import time
 
 import draw
 
-IMAGE_SIZE = 1400
+IMAGE_SIZE = 1200
 
 class HexagonGridWidget(QWidget):
     def __init__(self, parent, sim):
@@ -60,6 +60,7 @@ class HexagonGridWidget(QWidget):
 
     def renderTimeout(self):
         """ Run a step of sorting algorithms and then render them to their images """
+        start = time.time()
         if self.running_sim:
             self.sim.update()
             print(f"Iteration: {self.sim.iteration_count}")
@@ -77,6 +78,8 @@ class HexagonGridWidget(QWidget):
         if self.frame_counter % self.fps_update_freq == 0:
             print(f'FPS: {self.fps_update_freq/self.frame_time_sum} ({1000*self.frame_time_sum/self.fps_update_freq}ms)')
             self.frame_time_sum = 0
+        end = time.time()
+        #print("Entire frame took ", end - start)
     
     def keyPressEvent(self, event):
         # Play/pause key

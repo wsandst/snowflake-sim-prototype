@@ -1,5 +1,4 @@
 import math
-
 HEX_SIZE = 4
 HEX_OFFSET = 50
 AA_LEVEL = 2
@@ -12,6 +11,8 @@ class Cell:
         self.receptive = False
         self.water_level = 0
         self.diffusion_content = 0
+        self.corners = self.get_corners()
+        self.corners.append(self.corners[0])
 
     def get_pixel_coord(self):
         x = HEX_SIZE * math.sqrt(3) * (self.x + 0.5 * (self.y % 2 == 1))

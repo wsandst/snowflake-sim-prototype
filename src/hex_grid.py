@@ -5,17 +5,17 @@ HEX_OFFSET = 50
 AA_LEVEL = 2
 
 class Cell:
-    def __init__(self, q, r):
-        self.q = q
-        self.r = r
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
         self.neighbours = []
         self.receptive = False
         self.water_level = 0
         self.diffusion_content = 0
 
     def get_pixel_coord(self):
-        x = HEX_SIZE * (math.sqrt(3) * self.q  +  math.sqrt(3)/2 * self.r)
-        y = HEX_SIZE * (3./2 * self.r)
+        x = HEX_SIZE * math.sqrt(3) * (self.x + 0.5 * (self.y % 2 == 1))
+        y = HEX_SIZE * 3/2 * self.y
         return (x, y)
 
     def get_corners(self):
@@ -48,49 +48,49 @@ class Cell:
 class HexGrid:
     """ Hexagonal grid, represented using Axial coordinates. """
     def __init__(self, width, height):
-        self.cells = [None for _ in range((width+width//2)*height)]
+        self.cells = [None for _ in range(width*height)]
         self.width = width
         self.height = height
-        for r in range(self.height):
-            r_offset = math.floor(r/2.0)
-            for q in range(0-r_offset, self.width-r_offset):
-                self.set_cell(q, r, Cell(q, r))
+
+        for y in range(self.height):
+            for x in range(self.height):
+                self.set_cell(x, y, Cell(x, y))
         for cell in self.get_all_cells():
-            cell.neighbours = self.get_neighbours(cell.q, cell.r)
+            cell.neighbours = self.get_neighbours(cell.x, cell.y)
         self.edge_cells = self.get_edge_cells()
         self.all_cells = self.get_all_cells()
 
-    def get_cell(self, q, r):
-        return self.cells[q*self.height + r]
+    def get_cell(self, x, y):
+        return self.cells[y*self.height + x]
 
-    def set_cell(self, q, r, cell):
-        self.cells[q*self.height + r] = cell
+    def set_cell(self, x, y, cell):
+        self.cells[y*self.height + x] = cell
 
     def get_all_cells(self):
         all_cells = list()
-        for r in range(self.height):
-            r_offset = math.floor(r/2.0)
-            for q in range(0-r_offset, self.width-r_offset):
-                all_cells.append(self.get_cell(q, r))
+        for y in range(self.height):
+            for x in range(self.width):
+                all_cells.append(self.get_cell(x, y))
         return all_cells
 
-    def inside_bounds(self, q, r):
-        return (q < self.width and r < self.height and self.get_cell(q,r) != None)
+    def inside_bounds(self, x, y):
+        return (x < self.width and y < self.height and self.get_cell(x,y) != None)
 
-    def get_neighbours(self, q, r):
+    def get_neighbours(self, x, y):
         neighbours = []
-        neighbour_coords = [(1, 0), (1, -1), (0, -1), (-1, 0), (-1, 1), (0, 1)]
-        for coord in neighbour_coords:
-            nq = q + coord[0]
-            nr = r + coord[1]
-            if self.inside_bounds(nq, nr):
-                neighbours.append(self.get_cell(nq, nr))
+        if (y % 2 == 0): # Even
+            neigh_coords = [(+1,  0), (0, -1), (-1, -1), (-1,  0), (-1, +1), ( 0, +1)]
+        else: # Odd
+            neigh_coords = [(+1,  0), (+1, -1), (0, -1), (-1,  0), (0, +1), (+1, +1)]
+        for coord in neigh_coords:
+            if self.inside_bounds(x + coord[0], y + coord[1]):
+                neighbours.append(self.get_cell(x + coord[0], y + coord[1]))
         return neighbours
 
     def get_edge_cells(self):
         edge_cells = []
         for cell in self.get_all_cells():
-            if len(self.get_neighbours(cell.q, cell.r)) < 6:
+            if len(self.get_neighbours(cell.x, cell.y)) < 6:
                 edge_cells.append(cell)
         return edge_cells
 

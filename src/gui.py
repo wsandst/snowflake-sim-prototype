@@ -12,7 +12,7 @@ import time
 
 import draw
 
-IMAGE_SIZE = 1400
+IMAGE_SIZE = 800
 
 class HexagonGridWidget(QWidget):
     def __init__(self, parent, sim):
